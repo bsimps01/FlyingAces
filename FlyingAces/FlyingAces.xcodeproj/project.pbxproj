@@ -21,6 +21,8 @@
 		1BBA558D23C3DB6100F1B9E9 /* ADFX-01MorganNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBA558C23C3DB6100F1B9E9 /* ADFX-01MorganNormal.png */; };
 		1BBA558F23C3DBB700F1B9E9 /* Submariner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBA558E23C3DBB700F1B9E9 /* Submariner.png */; };
 		1BBA559123C3F58C00F1B9E9 /* Ace_logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1BBA559023C3F58C00F1B9E9 /* Ace_logo.jpg */; };
+		1BBA559323C525E500F1B9E9 /* Clouds.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBA559223C525E500F1B9E9 /* Clouds.png */; };
+		1BBA559523C56BFA00F1B9E9 /* Clouds.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1BBA559423C56BF900F1B9E9 /* Clouds.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		1BBA558C23C3DB6100F1B9E9 /* ADFX-01MorganNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ADFX-01MorganNormal.png"; sourceTree = "<group>"; };
 		1BBA558E23C3DBB700F1B9E9 /* Submariner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Submariner.png; sourceTree = "<group>"; };
 		1BBA559023C3F58C00F1B9E9 /* Ace_logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Ace_logo.jpg; sourceTree = "<group>"; };
+		1BBA559223C525E500F1B9E9 /* Clouds.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Clouds.png; sourceTree = "<group>"; };
+		1BBA559423C56BF900F1B9E9 /* Clouds.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Clouds.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,11 +101,13 @@
 				1BBA556423C3C66100F1B9E9 /* GameScene.sks */,
 				1BBA556623C3C66100F1B9E9 /* Actions.sks */,
 				1BBA556823C3C66100F1B9E9 /* GameScene.swift */,
+				1BBA559423C56BF900F1B9E9 /* Clouds.sks */,
 				1BBA556A23C3C66100F1B9E9 /* GameViewController.swift */,
 				1BBA556C23C3C66100F1B9E9 /* Main.storyboard */,
 				1BBA556F23C3C66500F1B9E9 /* Assets.xcassets */,
 				1BBA558823C3DA2100F1B9E9 /* f22_raptor_black.png */,
 				1BBA558E23C3DBB700F1B9E9 /* Submariner.png */,
+				1BBA559223C525E500F1B9E9 /* Clouds.png */,
 				1BBA559023C3F58C00F1B9E9 /* Ace_logo.jpg */,
 				1BBA558C23C3DB6100F1B9E9 /* ADFX-01MorganNormal.png */,
 				1BBA558A23C3DA4B00F1B9E9 /* f16_Assassin.png */,
@@ -209,8 +215,10 @@
 				1BBA558B23C3DA4C00F1B9E9 /* f16_Assassin.png in Resources */,
 				1BBA557323C3C66500F1B9E9 /* LaunchScreen.storyboard in Resources */,
 				1BBA558923C3DA2100F1B9E9 /* f22_raptor_black.png in Resources */,
+				1BBA559323C525E500F1B9E9 /* Clouds.png in Resources */,
 				1BBA558F23C3DBB700F1B9E9 /* Submariner.png in Resources */,
 				1BBA556723C3C66100F1B9E9 /* Actions.sks in Resources */,
+				1BBA559523C56BFA00F1B9E9 /* Clouds.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
