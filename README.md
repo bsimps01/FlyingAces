@@ -1,7 +1,7 @@
 # Flying Aces
 
 ---
-Programming Language: "Swift"
+Programming Language: Swift
 ---
 
 Do you have what it takes to be Top Gun? Fly with the best of the best in this overhead simulation of planes attacking with full force.
