@@ -13,7 +13,8 @@ import CoreMotion
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var Clouds = SKSpriteNode()
-    var player:SKSpriteNode!
+    var Waves = SKSpriteNode()
+    //var player: SKSpriteNode!
     var scoreLabel:SKLabelNode!
     var score: Int = 0 {
         didSet {
@@ -26,16 +27,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let bulletCategory:UInt32 = 0x1 << 0
     let motionManager = CMMotionManager()
     var xAcceleration: CGFloat = 0
+    let player = SKSpriteNode(imageNamed: "player")
     
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
-        player = SKSpriteNode(imageNamed: "player")
+       //let player = SKSpriteNode(imageNamed: "player")
         
-        player.position = CGPoint(x: 0, y: player.size.height / 2 + 10)
+        //player.position = CGPoint(x: 0, y: player.size.height / 2 + 10)
         
         self.addChild(player)
         //Sets the location for the objects in the game
         self.anchorPoint = CGPoint(x: 0.5, y: 0)
+        player.xScale = 0.5
+        player.yScale = 0.5
+        player.position = CGPoint(x: frame.width / 2 + 10, y: frame.height / 2)
         
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.physicsWorld.contactDelegate = self
@@ -51,15 +56,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Sets the amount of planes that get emmitted from the top of the game
         gameTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
         //Creates the movement for the player on the screen
-        motionManager.accelerometerUpdateInterval = 0.2
-        motionManager.startAccelerometerUpdates(to: OperationQueue.current!) {(data:CMAccelerometerData?, error:Error?) in
-            if let accelerometerData = data {
-                let acceleration = accelerometerData.acceleration
-                self.xAcceleration = CGFloat(acceleration.x) * 0.75 + self.xAcceleration * 0.25
-            }
-        }
         
         createClouds()
+        createWaves()
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch in (touches as! Set<UITouch>) {
+            let location = touch.location(in: self)
+            
+            if player.contains(location){
+                player.position = location
+            }
+        }
     }
     
     //Creates the enemy planes in the game
@@ -97,6 +107,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //get the first touch
         //move the plane to the touch's x position
         //leave y the same
+        for touch in touches {
+            let positionInScene = touch.location(in: self)
+            let name = self.player.atPoint(positionInScene).name
+            let nodeFound = self.player.atPoint(positionInScene)
+            
+            if name != nil {
+                nodeFound.removeFromParent()
+            }
+        }
+        
+        for touch in (touches as! Set<UITouch>) {
+            let location = touch.location(in: self)
+            
+            if player.contains(location){
+                player.position = location
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -104,7 +131,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     override func update(_ currentTime: TimeInterval) {
         moveClouds()
-
+        moveWaves()
 }
     
     func fireBullets() {
@@ -141,7 +168,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask{
         firstBody = contact.bodyA
         secondBody = contact.bodyB
-        }else{
+        }
+        else{
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
@@ -169,12 +197,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         score += 5
     }
     
-    override func didSimulatePhysics() {
-        player.position.x += xAcceleration * 50
-        if player.position.x < -20 {
-            player.position = CGPoint(x: self.size.width + 20, y: player.position.y)
-        }else if player.position.x > self.size.width + 20 {
-            player.position = CGPoint(x: -20, y: player.position.y)
+    func enemyDidCollideWithPlayer (player: SKSpriteNode, enemyNode: SKSpriteNode){
+        let explosion = SKEmitterNode(fileNamed: "Explosion")!
+        explosion.position = enemyNode.position
+        explosion.position = player.position
+        self.addChild(explosion)
+        
+        self.run(SKAction.playSoundFileNamed("explosion.mp3", waitForCompletion: false))
+        
+        player.removeFromParent()
+        enemyNode.removeFromParent()
+        
+        self.run(SKAction.wait(forDuration: 2)){
+            explosion.removeFromParent()
         }
     }
 
@@ -184,25 +219,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let Clouds = SKSpriteNode(imageNamed: "Clouds")
             Clouds.name = "Clouds"
             Clouds.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
-            Clouds.anchorPoint = CGPoint(x: 0.0, y: 0)
+            Clouds.anchorPoint = CGPoint(x: 0.0, y: 0.0)
             Clouds.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Clouds.size.height)
             Clouds.zPosition = -1
         
             self.addChild(Clouds)
     }
 }
+    
+    func createWaves(){
+        //Creates waves background
+        for i in 0...3 {
+            let Waves = SKSpriteNode(imageNamed: "Waves")
+            Waves.name = "Waves"
+            Waves.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
+            Waves.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            Waves.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Waves.size.height)
+            Waves.zPosition = -2
+            
+            self.addChild(Waves)
+        }
+    }
 
     func moveClouds() {
         //Moves the clouds down the screen in a loop
         self.enumerateChildNodes(withName: "Clouds", using: ({
             (node, error) in
-        
             node.position.y -= 6
-        
             if node.position.y < -((self.scene?.size.height)!) {
-            
                 node.position.y += (self.scene?.size.height)! * 3
         }
     }))
 }
+    func moveWaves() {
+        self.enumerateChildNodes(withName: "Waves", using: ({
+            (node, error) in
+            node.position.y -= 2
+            if node.position.y < -((self.scene?.size.height)!) {
+                node.position.y += (self.scene?.size.height)! * 3
+            }
+            
+        }))
+    }
 }
