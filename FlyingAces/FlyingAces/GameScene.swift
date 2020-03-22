@@ -24,45 +24,69 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameTimer: Timer!
     var enemyPlanes = ["enemy1", "enemy2", "enemy3"]
     let enemyCategory: UInt32 = 0x1 << 1
-    let bulletCategory:UInt32 = 0x1 << 0
+    let bulletCategory: UInt32 = 0x1 << 0
+    let playerCategory: UInt32 = 0x1 << 0
     let motionManager = CMMotionManager()
     var xAcceleration: CGFloat = 0
     let player = SKSpriteNode(imageNamed: "player")
     
+    enum colliderType: UInt32 {
+        case heroPlane = 1
+        case enemies = 2
+    }
+    
+    var livesArray: [SKSpriteNode]!
+    
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
        //let player = SKSpriteNode(imageNamed: "player")
-        
-        //player.position = CGPoint(x: 0, y: player.size.height / 2 + 10)
+    
         
         self.addChild(player)
         //Sets the location for the objects in the game
         self.anchorPoint = CGPoint(x: 0.5, y: 0)
         player.xScale = 0.5
         player.yScale = 0.5
-        player.position = CGPoint(x: frame.width / 2 + 10, y: frame.height / 2)
+        player.position = CGPoint(x: 0, y: frame.height / 2 + 10)
         
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.physicsWorld.contactDelegate = self
         //Creates the score for the logic when an enemy gets hit
         scoreLabel = SKLabelNode(text: "Score: 0")
-        scoreLabel.position = CGPoint(x: 120, y: self.frame.size.height - 60)
-        scoreLabel.fontName = "Arial"
-        scoreLabel.fontSize = 36
+        scoreLabel.position = CGPoint(x: 40, y: self.frame.size.height - 70)
+        scoreLabel.fontName = "Rockwell"
+        scoreLabel.fontSize = 50
         scoreLabel.fontColor = UIColor.yellow
         score = 0
         
         self.addChild(scoreLabel)
         //Sets the amount of planes that get emmitted from the top of the game
-        gameTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
+        
+        var timeInterval = 0.75
+        
+        if UserDefaults.standard.bool(forKey: "hard") {
+            timeInterval = 0.3
+        }
+        gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
         //Creates the movement for the player on the screen
         
         createClouds()
-        createWaves()
+        createLand()
+        addLives()
+    }
+    
+    func addLives(){
+        livesArray = [SKSpriteNode]()
+        
+        for live in 1...3 {
+            let liveNode = SKSpriteNode(imageNamed: "lives")
+            liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 60)
+            self.addChild(liveNode)
+            livesArray.append(liveNode)
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         for touch in (touches as! Set<UITouch>) {
             let location = touch.location(in: self)
             
@@ -89,6 +113,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemy.physicsBody?.categoryBitMask = enemyCategory
         enemy.physicsBody?.contactTestBitMask = bulletCategory
         enemy.physicsBody?.collisionBitMask = 0
+        enemy.physicsBody!.affectedByGravity = false
+        enemy.physicsBody!.categoryBitMask = colliderType.enemies.rawValue
+        enemy.physicsBody!.contactTestBitMask = colliderType.heroPlane.rawValue
+        enemy.physicsBody!.collisionBitMask = colliderType.heroPlane.rawValue
         
         self.addChild(enemy)
         
@@ -97,11 +125,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var actionArray = [SKAction]()
         
         actionArray.append(SKAction.move(to: CGPoint(x: position, y: -enemy.size.height), duration: animationDuration))
+        actionArray.append(SKAction.run {self.run(SKAction.playSoundFileNamed("torpedo.mp3", waitForCompletion: false))
+            
+            if self.livesArray.count > 0 {
+                let liveNode = self.livesArray.first
+                liveNode!.removeFromParent()
+                self.livesArray.removeFirst()
+                
+                if self.livesArray.count == 0 {
+                    //Game Over Transistion screen
+                    self.withCollision()
+                    let transition = SKTransition.flipHorizontal(withDuration: 0.5)
+                    let gameOver = SKScene(fileNamed: "GameOver") as! GameOver
+                    gameOver.score = self.score
+                    self.view?.presentScene(gameOver, transition: transition)
+                }
+            }
+        })
+        
         actionArray.append(SKAction.removeFromParent())
         
         enemy.run(SKAction.sequence(actionArray))
     }
     
+    func withCollision(){
+        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
+        player.physicsBody!.affectedByGravity = false
+        player.physicsBody!.categoryBitMask = colliderType.heroPlane.rawValue
+        player.physicsBody!.contactTestBitMask = colliderType.enemies.rawValue
+        player.physicsBody!.collisionBitMask = colliderType.enemies.rawValue
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //get the first touch
@@ -129,13 +182,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         fireBullets()
     }
+    
     override func update(_ currentTime: TimeInterval) {
         moveClouds()
-        moveWaves()
+        moveLand()
 }
     
     func fireBullets() {
         //Creates the bullets and adds effects with how it reacts after pressing down on the screen
+        self.run(SKAction.playSoundFileNamed("Bullet.mp3", waitForCompletion: false))
         let bulletNode = SKSpriteNode(imageNamed: "bullet")
         bulletNode.position = player.position
         bulletNode.position.y += 5
@@ -176,7 +231,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if (firstBody.categoryBitMask & bulletCategory) != 0 && (secondBody.categoryBitMask & enemyCategory) != 0 {
             bulletDidCollideWithEnemy(bulletNode: firstBody.node as! SKSpriteNode, enemyNode: secondBody.node as! SKSpriteNode)
-            
         }
         
     }
@@ -198,10 +252,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func enemyDidCollideWithPlayer (player: SKSpriteNode, enemyNode: SKSpriteNode){
-        let explosion = SKEmitterNode(fileNamed: "Explosion")!
-        explosion.position = enemyNode.position
-        explosion.position = player.position
-        self.addChild(explosion)
+        let explosion1 = SKEmitterNode(fileNamed: "Explosion")!
+        explosion1.position = enemyNode.position
+        explosion1.position = player.position
+        self.addChild(explosion1)
         
         self.run(SKAction.playSoundFileNamed("explosion.mp3", waitForCompletion: false))
         
@@ -209,7 +263,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemyNode.removeFromParent()
         
         self.run(SKAction.wait(forDuration: 2)){
-            explosion.removeFromParent()
+            explosion1.removeFromParent()
         }
     }
 
@@ -227,17 +281,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 }
     
-    func createWaves(){
+    func createLand(){
         //Creates waves background
         for i in 0...3 {
-            let Waves = SKSpriteNode(imageNamed: "Waves")
-            Waves.name = "Waves"
-            Waves.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
-            Waves.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-            Waves.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Waves.size.height)
-            Waves.zPosition = -2
+            let Land = SKSpriteNode(imageNamed: "Land")
+            Land.name = "Land"
+            Land.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
+            Land.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            Land.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Land.size.height)
+            Land.zPosition = -2
             
-            self.addChild(Waves)
+            self.addChild(Land)
         }
     }
 
@@ -251,10 +305,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }))
 }
-    func moveWaves() {
-        self.enumerateChildNodes(withName: "Waves", using: ({
+    func moveLand() {
+        self.enumerateChildNodes(withName: "Land", using: ({
             (node, error) in
-            node.position.y -= 2
+            node.position.y -= 1
             if node.position.y < -((self.scene?.size.height)!) {
                 node.position.y += (self.scene?.size.height)! * 3
             }
