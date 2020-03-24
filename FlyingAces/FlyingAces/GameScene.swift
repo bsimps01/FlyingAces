@@ -52,7 +52,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         //Creates the score for the logic when an enemy gets hit
         scoreLabel = SKLabelNode(text: "Score: 0")
-        scoreLabel.position = CGPoint(x: 40, y: self.frame.size.height - 70)
+        scoreLabel.position = CGPoint(x: 20, y: self.frame.size.height - 70)
         scoreLabel.fontName = "Rockwell"
         scoreLabel.fontSize = 50
         scoreLabel.fontColor = UIColor.yellow
@@ -137,7 +137,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let gameOver = SKScene(fileNamed: "GameOver") as! GameOver
                     gameOver.score = self.score
                     self.view?.presentScene(gameOver, transition: transition)
-                    self.withCollision()
+                    //self.withCollision()
                 }
             }
         })
