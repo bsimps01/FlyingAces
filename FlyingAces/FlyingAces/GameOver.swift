@@ -7,6 +7,8 @@
 //
 
 import SpriteKit
+import UIKit
+import GameplayKit
 
 class GameOver: SKScene {
     
@@ -15,10 +17,10 @@ class GameOver: SKScene {
     var newGameButtonNode:SKSpriteNode!
     
     override func didMove(to view: SKView) {
-        scoreLabel = self.childNode(withName: "scoreLabel") as! SKLabelNode
+        scoreLabel = (self.childNode(withName: "scoreLabel") as! SKLabelNode)
         scoreLabel.text = "\(score)"
         
-        newGameButtonNode = self.childNode(withName: "newGameButton") as! SKSpriteNode
+        newGameButtonNode = (self.childNode(withName: "newGameButton") as! SKSpriteNode)
         newGameButtonNode.texture = SKTexture(imageNamed: "newGameButton")
     }
     

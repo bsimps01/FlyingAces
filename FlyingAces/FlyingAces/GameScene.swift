@@ -40,7 +40,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
        //let player = SKSpriteNode(imageNamed: "player")
-    
         
         self.addChild(player)
         //Sets the location for the objects in the game
@@ -87,7 +86,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in (touches as! Set<UITouch>) {
+        for touch in (touches) {
             let location = touch.location(in: self)
             
             if player.contains(location){
@@ -134,11 +133,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if self.livesArray.count == 0 {
                     //Game Over Transistion screen
-                    self.withCollision()
                     let transition = SKTransition.flipHorizontal(withDuration: 0.5)
                     let gameOver = SKScene(fileNamed: "GameOver") as! GameOver
                     gameOver.score = self.score
                     self.view?.presentScene(gameOver, transition: transition)
+                    self.withCollision()
                 }
             }
         })
