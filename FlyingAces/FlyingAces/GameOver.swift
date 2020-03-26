@@ -56,6 +56,7 @@ class GameOver: SKScene {
     }
     override func sceneDidLoad() {
         scoreLabel = (self.childNode(withName: "scoreLabel") as! SKLabelNode)
+        score = 0
         scoreLabel.text = "\(score)"
         scoreLabel.zPosition = 1
         scoreLabel.position = CGPoint(x: 100, y: 275)
