@@ -29,11 +29,11 @@ class InfoScene: SKScene {
 
     override func didMove(to view: SKView) {
         
-        let background = SKSpriteNode(imageNamed: "background")
-        background.size = UIScreen.main.bounds.size
-        background.position = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
-        background.zPosition = 2
-        self.addChild(background)
+        let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
+        flyingAcesLogo.size = CGSize(width: 250, height: 200)
+        flyingAcesLogo.zPosition = 3
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: 500)
+        self.addChild(flyingAcesLogo)
         createButton()
     
     
@@ -48,7 +48,7 @@ class InfoScene: SKScene {
             let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
             button.setButtonLabel(title: "Back", font: "Marker Felt", fontSize: 20)
-            button.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+            button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
             button.size = CGSize(width: 300, height: 100)
             button.zPosition = 4
             self.addChild(button)

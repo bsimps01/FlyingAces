@@ -29,7 +29,6 @@ class MenuScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
         flyingAcesLogo.size = CGSize(width: 350, height: 275)
         flyingAcesLogo.zPosition = 3
@@ -46,7 +45,7 @@ class MenuScene: SKScene {
         
         let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
-        button.setButtonLabel(title: "Start Game", font: "Marker Felt", fontSize: 20)
+        button.setButtonLabel(title: "Start Game", font: "Rockwell", fontSize: 20)
         button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
         button.size = CGSize(width: 300, height: 100)
         button.zPosition = 4
@@ -54,7 +53,7 @@ class MenuScene: SKScene {
         
         let button2 = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button2.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap2))
-        button2.setButtonLabel(title: "How to Play", font: "Marker Felt", fontSize: 20)
+        button2.setButtonLabel(title: "How to Play", font: "Rockwell", fontSize: 20)
         button2.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 160)
         button2.size = CGSize(width: 300, height: 100)
         button2.zPosition = 4
@@ -89,7 +88,7 @@ class MenuScene: SKScene {
             Clouds.name = "Clouds"
             Clouds.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
             Clouds.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-            Clouds.position = CGPoint(x: -(self.frame.size.width / 100), y: CGFloat(i) * Clouds.size.height)
+            Clouds.position = CGPoint(x: -(self.frame.size.width / 1000), y: CGFloat(i) * Clouds.size.height)
             Clouds.zPosition = -1
             
             self.addChild(Clouds)

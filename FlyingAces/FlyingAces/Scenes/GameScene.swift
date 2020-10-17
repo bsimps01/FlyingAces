@@ -40,20 +40,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
-        //let player = SKSpriteNode(imageNamed: "player")
-        
-        self.addChild(player)
-        //Sets the location for the objects in the game
-        self.anchorPoint = CGPoint(x: 0.5, y: 0)
-//        player.xScale = 0.5
-//        player.yScale = 0.5
-        player.position = CGPoint(x: 0, y: frame.height / 2 + 10)
-        
+
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.physicsWorld.contactDelegate = self
         //Creates the score for the logic when an enemy gets hit
         scoreLabel = SKLabelNode(text: "Score: \(score)")
-        scoreLabel.position = CGPoint(x: 20, y: self.frame.size.height - 70)
+        scoreLabel.position = CGPoint(x: 70, y: self.frame.size.height - 70)
         scoreLabel.fontName = "Rockwell"
         scoreLabel.fontSize = 50
         scoreLabel.fontColor = UIColor.yellow
@@ -62,25 +54,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(scoreLabel)
         //Sets the amount of planes that get emmitted from the top of the game
         
-        var timeInterval = 0.75
+        let timeInterval = 0.75
         
-        if UserDefaults.standard.bool(forKey: "hard") {
-            timeInterval = 0.3
-        }
         gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
         //Creates the movement for the player on the screen
-        
+        createPlayer()
         createClouds()
         createLand()
         addLives()
+    }
+    
+    func createPlayer(){
+        player.position = CGPoint(x: 150, y: 25)
+        player.size = CGSize(width: 100, height: 150)
+        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width/2)
+        player.physicsBody?.isDynamic = false
+        self.addChild(player)
     }
     
     func addLives(){
         livesArray = [SKSpriteNode]()
         
         for live in 1...3 {
-            let liveNode = SKSpriteNode(imageNamed: "lives")
-            liveNode.size = CGSize(width: 20, height: 20)
+            let liveNode = SKSpriteNode(imageNamed: "player")
+            liveNode.size = CGSize(width: 50, height: 50)
             liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 60)
             self.addChild(liveNode)
             livesArray.append(liveNode)
@@ -100,10 +97,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //Creates the enemy planes in the game
     @objc func addPlane() {
         enemyPlanes = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: enemyPlanes) as! [String]
-        
         let enemy = SKSpriteNode(imageNamed: enemyPlanes[0])
-        
-        let randomEnemyPosition = GKRandomDistribution(lowestValue: -200, highestValue: 200)
+        enemy.size = CGSize(width: 100, height: 140)
+        let randomEnemyPosition = GKRandomDistribution(lowestValue: 0, highestValue: Int(self.frame.size.width))
         let position = CGFloat(randomEnemyPosition.nextInt())
         
         enemy.position = CGPoint(x: position, y: self.frame.size.height + enemy.size.height)
@@ -139,7 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let gameOver = SKScene(fileNamed: "GameOver") as! GameOver
                     gameOver.score = self.score
                     self.view?.presentScene(gameOver, transition: transition)
-                    self.withCollision()
+                    //self.withCollision()
                 }
             }
         })
@@ -148,14 +144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         enemy.run(SKAction.sequence(actionArray))
     }
-    
-    func withCollision(){
-        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
-        player.physicsBody!.affectedByGravity = false
-        player.physicsBody!.categoryBitMask = colliderType.heroPlane.rawValue
-        player.physicsBody!.contactTestBitMask = colliderType.enemies.rawValue
-        player.physicsBody!.collisionBitMask = colliderType.enemies.rawValue
-    }
+
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //get the first touch
@@ -171,13 +160,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        for touch in (touches as! Set<UITouch>) {
-            let location = touch.location(in: self)
-            
-            if player.contains(location){
-                player.position = location
-            }
-        }
+//        for touch in (touches as! Set<UITouch>) {
+//            let location = touch.location(in: self)
+//
+//            if player.contains(location){
+//                player.position = location
+//            }
+//        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -193,12 +182,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Creates the bullets and adds effects with how it reacts after pressing down on the screen
         self.run(SKAction.playSoundFileNamed("Bullet.mp3", waitForCompletion: false))
         let bulletNode = SKSpriteNode(imageNamed: "bullet")
-        bulletNode.position = player.position
+        bulletNode.size = CGSize(width: 20, height: 70)
+        bulletNode.position = CGPoint(x: player.position.x, y: player.position.y + 115)
         bulletNode.position.y += 5
-        
+        bulletNode.setScale(0.75)
         bulletNode.physicsBody = SKPhysicsBody(circleOfRadius: bulletNode.size.width / 2)
         bulletNode.physicsBody?.isDynamic = true
-        
         bulletNode.physicsBody?.categoryBitMask = bulletCategory
         bulletNode.physicsBody?.contactTestBitMask = enemyCategory
         bulletNode.physicsBody?.collisionBitMask = 0
@@ -278,7 +267,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Clouds.name = "Clouds"
             Clouds.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
             Clouds.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-            Clouds.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Clouds.size.height)
+            Clouds.position = CGPoint(x: -(self.frame.size.width / 1000), y: CGFloat(i) * Clouds.size.height)
             Clouds.zPosition = -1
             
             self.addChild(Clouds)
@@ -292,7 +281,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Land.name = "Land"
             Land.size = CGSize(width: (self.scene?.size.width)!, height: (self.scene?.size.height)!)
             Land.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-            Land.position = CGPoint(x: -(self.frame.size.width / 2), y: CGFloat(i) * Land.size.height)
+            Land.position = CGPoint(x: -(self.frame.size.width / 1000), y: CGFloat(i) * Land.size.height)
             Land.zPosition = -2
             
             self.addChild(Land)
