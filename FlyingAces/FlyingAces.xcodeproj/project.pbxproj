@@ -11,6 +11,8 @@
 		1B67424E2538DA4A00B76F61 /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B67424D2538DA4A00B76F61 /* InfoScene.swift */; };
 		1B6742542539288800B76F61 /* backgroundMusicMenu.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B6742532539288800B76F61 /* backgroundMusicMenu.mp3 */; };
 		1B6742582539312200B76F61 /* backgroundMusicGame.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B6742572539312200B76F61 /* backgroundMusicGame.mp3 */; };
+		1B674262253B7ADE00B76F61 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B674261253B7ADE00B76F61 /* PhysicsCategory.swift */; };
+		1B674266253B7CB300B76F61 /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B674265253B7CB300B76F61 /* Enemy.swift */; };
 		1B84A0522425B7EC00DCBEA0 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B84A0512425B7EC00DCBEA0 /* MenuScene.swift */; };
 		1B84A0542428186C00DCBEA0 /* Bullet.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1B84A0532428186B00DCBEA0 /* Bullet.wav */; };
 		1B84A05624281E8900DCBEA0 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B84A05524281E8900DCBEA0 /* GameOverScene.swift */; };
@@ -49,6 +51,8 @@
 		1B67424D2538DA4A00B76F61 /* InfoScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoScene.swift; sourceTree = "<group>"; };
 		1B6742532539288800B76F61 /* backgroundMusicMenu.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusicMenu.mp3; sourceTree = "<group>"; };
 		1B6742572539312200B76F61 /* backgroundMusicGame.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusicGame.mp3; sourceTree = "<group>"; };
+		1B674261253B7ADE00B76F61 /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
+		1B674265253B7CB300B76F61 /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
 		1B84A0512425B7EC00DCBEA0 /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		1B84A0532428186B00DCBEA0 /* Bullet.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Bullet.wav; sourceTree = "<group>"; };
 		1B84A05524281E8900DCBEA0 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
@@ -122,6 +126,8 @@
 		1B6742462538D57F00B76F61 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1B674265253B7CB300B76F61 /* Enemy.swift */,
+				1B674261253B7ADE00B76F61 /* PhysicsCategory.swift */,
 				1B6742412538D4FD00B76F61 /* ButtonNode.swift */,
 			);
 			path = Model;
@@ -238,7 +244,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Benjamin Simpson";
 				TargetAttributes = {
 					1BBA555E23C3C66100F1B9E9 = {
@@ -309,9 +315,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BBA556923C3C66100F1B9E9 /* GameScene.swift in Sources */,
+				1B674262253B7ADE00B76F61 /* PhysicsCategory.swift in Sources */,
 				1BBA556B23C3C66100F1B9E9 /* GameViewController.swift in Sources */,
 				1B84A0522425B7EC00DCBEA0 /* MenuScene.swift in Sources */,
 				1B84A05624281E8900DCBEA0 /* GameOverScene.swift in Sources */,
+				1B674266253B7CB300B76F61 /* Enemy.swift in Sources */,
 				1B67424E2538DA4A00B76F61 /* InfoScene.swift in Sources */,
 				1BBA556323C3C66100F1B9E9 /* AppDelegate.swift in Sources */,
 				1B6742422538D4FD00B76F61 /* ButtonNode.swift in Sources */,
@@ -382,6 +390,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -442,6 +451,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

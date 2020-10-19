@@ -9,6 +9,7 @@
 import SpriteKit
 import UIKit
 import GameplayKit
+import AVFoundation
 
 class GameOverScene: SKScene {
     
@@ -19,6 +20,7 @@ class GameOverScene: SKScene {
     let highestScore = SKLabelNode(fontNamed: "American Typewriter")
     let highestScoreLabel = SKLabelNode(fontNamed: "American TypeWriter")
     let scoreKey = "scoreKey"
+    public var backgroundMusicPlayer: AVAudioPlayer?
 
     override init(size: CGSize) {
         // do initial configuration work here
@@ -38,7 +40,7 @@ class GameOverScene: SKScene {
         let soundOver = SKAction.playSoundFileNamed("gameOverSound.mp3", waitForCompletion: false)
         self.run(soundOver)
         
-        let background = SKSpriteNode(imageNamed: "background")
+        let background = SKSpriteNode(imageNamed: "GameOverImage")
         background.size = UIScreen.main.bounds.size
         background.position = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
         background.zPosition = 2
@@ -46,12 +48,36 @@ class GameOverScene: SKScene {
         createButton()
         createLabels()
         setHighestScore()
+        playBackgroundMusic("backgroundMusicMenu.mp3")
     
+    }
+    
+    public func playBackgroundMusic(_ filename: String) {
+      let url = Bundle.main.url(forResource: "backgroundMusicMenu.mp3", withExtension: nil)
+      if (url == nil) {
+        print("Could not find file: \(filename)")
+        return
+      }
+
+      var error: NSError? = nil
+      do {
+        backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
+      } catch let error1 as NSError {
+        error = error1
+        backgroundMusicPlayer = nil
+      }
+      if let player = backgroundMusicPlayer {
+        player.numberOfLoops = -1
+        player.prepareToPlay()
+        player.play()
+      } else {
+        print("Could not create audio player: \(error!)")
+      }
     }
     
     func createLabels(){
         scoreLabel.text = "Final Score"
-        scoreLabel.fontName = "Marker Felt Wide"
+        scoreLabel.fontName = "Copperplate-Bold"
         scoreLabel.fontColor = .yellow
         scoreLabel.fontSize = 30
         scoreLabel.position = CGPoint(x: size.width / 2, y: 400)
@@ -59,7 +85,7 @@ class GameOverScene: SKScene {
         self.addChild(scoreLabel)
         
         scoreLabelResult.text = "\(finalScore!)"
-        scoreLabelResult.fontName = "Marker Felt Wide"
+        scoreLabelResult.fontName = "Copperplate"
         scoreLabelResult.fontColor = .white
         scoreLabelResult.fontSize = 50
         scoreLabelResult.position = CGPoint(x: size.width / 2, y: 350)
@@ -69,12 +95,14 @@ class GameOverScene: SKScene {
         highestScoreLabel.text = "Highest Score"
         highestScoreLabel.fontName = "Copperplate-Bold"
         highestScoreLabel.fontColor = .red
-        highestScoreLabel.position = CGPoint(x: size.width / 2, y: 700)
+        highestScoreLabel.position = CGPoint(x: size.width / 2, y: 630)
+        highestScoreLabel.zPosition = 3
+        self.addChild(highestScoreLabel)
         
         addChild(gameOverLabel)
-        gameOverLabel.fontSize = 80.0
+        gameOverLabel.fontSize = 65.0
         gameOverLabel.color = SKColor.white
-        gameOverLabel.fontName = "Marker Felt Wide"
+        gameOverLabel.fontName = "Copperplate-Bold"
         gameOverLabel.zPosition = 3
         gameOverLabel.position = CGPoint(x: size.width / 2, y: 450)
     }
@@ -86,7 +114,7 @@ class GameOverScene: SKScene {
             
             let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(GameOverScene.buttonTap))
-            button.setButtonLabel(title: "Play Again", font: "Marker Felt", fontSize: 20)
+            button.setButtonLabel(title: "Play Again", font: "Copperplate", fontSize: 20)
             button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 70)
             button.size = CGSize(width: 300, height: 100)
             button.zPosition = 4
@@ -94,7 +122,7 @@ class GameOverScene: SKScene {
             
             let button2 = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button2.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(GameOverScene.buttonTap2))
-            button2.setButtonLabel(title: "Main Menu", font: "Marker Felt", fontSize: 20)
+            button2.setButtonLabel(title: "Main Menu", font: "Copperplate", fontSize: 20)
             button2.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 200)
             button2.size = CGSize(width: 300, height: 100)
             button2.zPosition = 4
@@ -106,6 +134,7 @@ class GameOverScene: SKScene {
 
             gameScene.scaleMode = .aspectFill
             let crossFade = SKTransition.crossFade(withDuration: 0.75)
+            self.backgroundMusicPlayer!.stop()
             if let spriteview = self.view{
                 spriteview.presentScene(gameScene, transition: crossFade)
             }
@@ -116,6 +145,7 @@ class GameOverScene: SKScene {
 
             gameScene.scaleMode = .aspectFill
             let crossFade = SKTransition.crossFade(withDuration: 0.75)
+            backgroundMusicPlayer!.stop()
             if let spriteview = self.view{
                 spriteview.presentScene(gameScene, transition: crossFade)
             }
@@ -129,6 +159,7 @@ class GameOverScene: SKScene {
         }else{
             highestScore.text = "\(score)"
         }
+        
         highestScore.fontColor = .white
         highestScore.fontSize = 30
         highestScore.position = CGPoint(x: size.width / 2, y: 600)

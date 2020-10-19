@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import CoreMotion
+import AVFoundation
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -16,19 +17,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var Waves = SKSpriteNode()
     //var player: SKSpriteNode!
     var scoreLabel:SKLabelNode!
+    var scoreLabelText:SKLabelNode!
     var score: Int = 0 {
         didSet {
-            scoreLabel.text = "Score: \(score)"
+            scoreLabel.text = "\(score)"
         }
     }
+    public var backgroundMusicPlayer: AVAudioPlayer?
     
     var gameTimer: Timer!
     var enemyPlanes = ["enemy1", "enemy2", "enemy3"]
     let enemyCategory: UInt32 = 0x1 << 1
     let bulletCategory: UInt32 = 0x1 << 0
     let playerCategory: UInt32 = 0x1 << 0
-    let motionManager = CMMotionManager()
-    var xAcceleration: CGFloat = 0
     let player = SKSpriteNode(imageNamed: "player")
     
     enum colliderType: UInt32 {
@@ -40,18 +41,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
-
-        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        self.physicsWorld.contactDelegate = self
+        
+        physicsWorld.gravity = CGVector(dx: 0, dy: -5)
+        physicsWorld.contactDelegate = self
         //Creates the score for the logic when an enemy gets hit
-        scoreLabel = SKLabelNode(text: "Score: \(score)")
-        scoreLabel.position = CGPoint(x: 70, y: self.frame.size.height - 70)
-        scoreLabel.fontName = "Rockwell"
-        scoreLabel.fontSize = 50
-        scoreLabel.fontColor = UIColor.yellow
+        scoreLabelText = SKLabelNode(text: "Score")
+        scoreLabelText.position = CGPoint(x: 75, y: self.frame.size.height - 45)
+        scoreLabelText.fontName = "Copperplate"
+        scoreLabelText.fontSize = 35
+        scoreLabelText.fontColor = UIColor.yellow
+        scoreLabelText.zPosition = 4
+        
+        scoreLabel = SKLabelNode(text: "\(score)")
+        scoreLabel.position = CGPoint(x: 75, y: self.frame.size.height - 70)
+        scoreLabel.fontName = "Copperplate"
+        scoreLabel.fontSize = 30
+        scoreLabel.fontColor = UIColor.white
         score = 0
         
         self.addChild(scoreLabel)
+        self.addChild(scoreLabelText)
         //Sets the amount of planes that get emmitted from the top of the game
         
         let timeInterval = 0.75
@@ -62,13 +71,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createClouds()
         createLand()
         addLives()
+        playBackgroundMusic("backgroundMusicGame.mp3")
+    }
+    
+    public func playBackgroundMusic(_ filename: String) {
+      let url = Bundle.main.url(forResource: "backgroundMusicGame.mp3", withExtension: nil)
+      if (url == nil) {
+        print("Could not find file: \(filename)")
+        return
+      }
+
+      var error: NSError? = nil
+      do {
+        backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
+      } catch let error1 as NSError {
+        error = error1
+        backgroundMusicPlayer = nil
+      }
+      if let player = backgroundMusicPlayer {
+        player.numberOfLoops = -1
+        player.prepareToPlay()
+        player.play()
+      } else {
+        print("Could not create audio player: \(error!)")
+      }
     }
     
     func createPlayer(){
-        player.position = CGPoint(x: 150, y: 25)
+        player.position = CGPoint(x: view!.frame.width / 2, y: 75)
         player.size = CGSize(width: 100, height: 150)
         player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width/2)
         player.physicsBody?.isDynamic = false
+        //player.physicsBody?.categoryBitMask = PhysicsCategory.Player
         self.addChild(player)
     }
     
@@ -78,7 +112,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for live in 1...3 {
             let liveNode = SKSpriteNode(imageNamed: "player")
             liveNode.size = CGSize(width: 50, height: 50)
-            liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 60)
+            liveNode.zPosition = 3
+            liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 40)
             self.addChild(liveNode)
             livesArray.append(liveNode)
         }
@@ -96,55 +131,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Creates the enemy planes in the game
     @objc func addPlane() {
-        enemyPlanes = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: enemyPlanes) as! [String]
-        let enemy = SKSpriteNode(imageNamed: enemyPlanes[0])
-        enemy.size = CGSize(width: 100, height: 140)
+        let enemy = Enemy()
+
         let randomEnemyPosition = GKRandomDistribution(lowestValue: 0, highestValue: Int(self.frame.size.width))
         let position = CGFloat(randomEnemyPosition.nextInt())
         
         enemy.position = CGPoint(x: position, y: self.frame.size.height + enemy.size.height)
         
-        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-        enemy.physicsBody?.isDynamic = true
-        
-        enemy.physicsBody?.categoryBitMask = enemyCategory
-        enemy.physicsBody?.contactTestBitMask = bulletCategory
-        enemy.physicsBody?.collisionBitMask = 0
-        enemy.physicsBody!.affectedByGravity = false
-        enemy.physicsBody!.categoryBitMask = colliderType.enemies.rawValue
-        enemy.physicsBody!.contactTestBitMask = colliderType.heroPlane.rawValue
-        enemy.physicsBody!.collisionBitMask = colliderType.heroPlane.rawValue
-        
         self.addChild(enemy)
         
-        let animationDuration: TimeInterval = 6
+        let animationDuration: TimeInterval = 3
         
         var actionArray = [SKAction]()
         
         actionArray.append(SKAction.move(to: CGPoint(x: position, y: -enemy.size.height), duration: animationDuration))
-        actionArray.append(SKAction.run {self.run(SKAction.playSoundFileNamed("torpedo.mp3", waitForCompletion: false))
+                actionArray.append(SKAction.run {self.run(SKAction.playSoundFileNamed("torpedo.mp3", waitForCompletion: false))
+        
+        if self.livesArray.count > 0 {
+            let liveNode = self.livesArray.first
+            liveNode!.removeFromParent()
+            self.livesArray.removeFirst()
             
-            if self.livesArray.count > 0 {
-                let liveNode = self.livesArray.first
-                liveNode!.removeFromParent()
-                self.livesArray.removeFirst()
-                
-                if self.livesArray.count == 0 {
-                    //Game Over Transistion screen
-                    let transition = SKTransition.flipHorizontal(withDuration: 0.5)
-                    let gameOver = SKScene(fileNamed: "GameOver") as! GameOver
-                    gameOver.score = self.score
-                    self.view?.presentScene(gameOver, transition: transition)
-                    //self.withCollision()
-                }
+            if self.livesArray.count == 0 {
+                self.backgroundMusicPlayer!.stop()
+                let transition = SKTransition.crossFade(withDuration: 0.2)
+                let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
+                gameOver.finalScore = self.score
+                self.view?.presentScene(gameOver, transition: transition)
             }
-        })
+        }
+                })
+        
         
         actionArray.append(SKAction.removeFromParent())
         
         enemy.run(SKAction.sequence(actionArray))
     }
-
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //get the first touch
@@ -159,14 +182,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 nodeFound.removeFromParent()
             }
         }
-        
-//        for touch in (touches as! Set<UITouch>) {
-//            let location = touch.location(in: self)
-//
-//            if player.contains(location){
-//                player.position = location
-//            }
-//        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -182,10 +197,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Creates the bullets and adds effects with how it reacts after pressing down on the screen
         self.run(SKAction.playSoundFileNamed("Bullet.mp3", waitForCompletion: false))
         let bulletNode = SKSpriteNode(imageNamed: "bullet")
-        bulletNode.size = CGSize(width: 20, height: 70)
-        bulletNode.position = CGPoint(x: player.position.x, y: player.position.y + 115)
-        bulletNode.position.y += 5
-        bulletNode.setScale(0.75)
+        bulletNode.size = CGSize(width: 15, height: 90)
+        bulletNode.position = CGPoint(x: player.position.x, y: player.position.y + 120)
+        bulletNode.position.y += 10
         bulletNode.physicsBody = SKPhysicsBody(circleOfRadius: bulletNode.size.width / 2)
         bulletNode.physicsBody?.isDynamic = true
         bulletNode.physicsBody?.categoryBitMask = bulletCategory
@@ -199,7 +213,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var actionArray = [SKAction]()
         
-        actionArray.append(SKAction.move(to: CGPoint(x: player.position.x, y: self.frame.size.height + 10), duration: animationDuration))
+        actionArray.append(SKAction.move(to: CGPoint(x: player.position.x, y: self.frame.size.height), duration: animationDuration))
         actionArray.append(SKAction.removeFromParent())
         
         bulletNode.run(SKAction.sequence(actionArray))
@@ -207,6 +221,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
+        
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         
@@ -220,10 +235,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if (firstBody.categoryBitMask & bulletCategory) != 0 && (secondBody.categoryBitMask & enemyCategory) != 0 {
-            bulletDidCollideWithEnemy(bulletNode: firstBody.node as! SKSpriteNode, enemyNode: secondBody.node as! SKSpriteNode)
+            bulletDidCollideWithEnemy(bulletNode: (firstBody.node as! SKSpriteNode), enemyNode: (secondBody.node as! SKSpriteNode))
+            self.score += 5
         }
         if (firstBody.categoryBitMask & enemyCategory) != 0 && (secondBody.categoryBitMask & playerCategory) != 0 {
+            
             enemyDidCollideWithPlayer(player: firstBody.node as! SKSpriteNode, enemyNode: secondBody.node as! SKSpriteNode)
+            
+
         }
         
     }
@@ -241,23 +260,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(SKAction.wait(forDuration: 2)){
             explosion.removeFromParent()
         }
-        score += 5
     }
     
     func enemyDidCollideWithPlayer (player: SKSpriteNode, enemyNode: SKSpriteNode){
         let explosion1 = SKEmitterNode(fileNamed: "Explosion")!
-        explosion1.position = enemyNode.position
         explosion1.position = player.position
         self.addChild(explosion1)
         
         self.run(SKAction.playSoundFileNamed("explosion.mp3", waitForCompletion: false))
         
         player.removeFromParent()
-        enemyNode.removeFromParent()
         
         self.run(SKAction.wait(forDuration: 2)){
             explosion1.removeFromParent()
         }
+        if self.livesArray.count > 0 {
+            let liveNode = self.livesArray.first
+            liveNode!.removeFromParent()
+            self.livesArray.removeFirst()
+            
+            if self.livesArray.count == 0 {
+                self.backgroundMusicPlayer!.stop()
+                let transition = SKTransition.crossFade(withDuration: 0.2)
+                let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
+                gameOver.finalScore = self.score
+                self.view?.presentScene(gameOver, transition: transition)
+        }
+        }
+        
+        
     }
     
     func createClouds() {

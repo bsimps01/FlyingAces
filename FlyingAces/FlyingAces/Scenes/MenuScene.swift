@@ -7,10 +7,12 @@
 //
 
 import SpriteKit
+import AVFoundation
 
 class MenuScene: SKScene {
     
     var Clouds = SKSpriteNode()
+    public var backgroundMusicPlayer: AVAudioPlayer?
     
     override init(size: CGSize) {
         // do initial configuration work here
@@ -37,7 +39,7 @@ class MenuScene: SKScene {
         createButtons()
         createClouds()
         createLand()
-    }
+        playBackgroundMusic("backgroundMusicMenu.mp3")    }
     
     func createButtons(){
         let buttonTexture = SKTexture(imageNamed: "button")
@@ -45,7 +47,7 @@ class MenuScene: SKScene {
         
         let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
-        button.setButtonLabel(title: "Start Game", font: "Rockwell", fontSize: 20)
+        button.setButtonLabel(title: "Start Game", font: "Copperplate", fontSize: 20)
         button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
         button.size = CGSize(width: 300, height: 100)
         button.zPosition = 4
@@ -53,7 +55,7 @@ class MenuScene: SKScene {
         
         let button2 = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button2.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap2))
-        button2.setButtonLabel(title: "How to Play", font: "Rockwell", fontSize: 20)
+        button2.setButtonLabel(title: "How to Play", font: "Copperplate", fontSize: 20)
         button2.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 160)
         button2.size = CGSize(width: 300, height: 100)
         button2.zPosition = 4
@@ -65,6 +67,7 @@ class MenuScene: SKScene {
         
         gameScene.scaleMode = .aspectFill
         let crossFade = SKTransition.crossFade(withDuration: 0.75)
+        backgroundMusicPlayer!.stop()
         if let spriteview = self.view{
             spriteview.presentScene(gameScene, transition: crossFade)
         }
@@ -79,6 +82,29 @@ class MenuScene: SKScene {
         if let spriteview = self.view{
             spriteview.presentScene(infoScene, transition: crossFade)
         }
+    }
+    
+    public func playBackgroundMusic(_ filename: String) {
+      let url = Bundle.main.url(forResource: "backgroundMusicMenu.mp3", withExtension: nil)
+      if (url == nil) {
+        print("Could not find file: \(filename)")
+        return
+      }
+
+      var error: NSError? = nil
+      do {
+        backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
+      } catch let error1 as NSError {
+        error = error1
+        backgroundMusicPlayer = nil
+      }
+      if let player = backgroundMusicPlayer {
+        player.numberOfLoops = -1
+        player.prepareToPlay()
+        player.play()
+      } else {
+        print("Could not create audio player: \(error!)")
+      }
     }
     
     func createClouds() {
