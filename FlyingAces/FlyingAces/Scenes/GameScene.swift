@@ -26,7 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     public var backgroundMusicPlayer: AVAudioPlayer?
     
     var gameTimer: Timer!
-    var enemyPlanes = ["enemy1", "enemy2", "enemy3"]
+    var enemyPlanes = ["enemy1", "enemy2", "enemy3", "enemy4", "enemy5"]
     let enemyCategory: UInt32 = 0x1 << 1
     let bulletCategory: UInt32 = 0x1 << 0
     let playerCategory: UInt32 = 0x1 << 0
@@ -99,10 +99,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createPlayer(){
         player.position = CGPoint(x: view!.frame.width / 2, y: 75)
-        player.size = CGSize(width: 100, height: 150)
+        player.size = CGSize(width: 120, height: 170)
         player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width/2)
         player.physicsBody?.isDynamic = false
-        //player.physicsBody?.categoryBitMask = PhysicsCategory.Player
         self.addChild(player)
     }
     
@@ -112,7 +111,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for live in 1...3 {
             let liveNode = SKSpriteNode(imageNamed: "player")
             liveNode.size = CGSize(width: 50, height: 50)
-            liveNode.zPosition = 3
+            liveNode.zPosition = 4
             liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 40)
             self.addChild(liveNode)
             livesArray.append(liveNode)
@@ -135,7 +134,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         let randomEnemyPosition = GKRandomDistribution(lowestValue: 0, highestValue: Int(self.frame.size.width))
         let position = CGFloat(randomEnemyPosition.nextInt())
-        
+        enemy.zPosition = 3
         enemy.position = CGPoint(x: position, y: self.frame.size.height + enemy.size.height)
         
         self.addChild(enemy)
@@ -154,7 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if self.livesArray.count == 0 {
                 self.backgroundMusicPlayer!.stop()
-                let transition = SKTransition.crossFade(withDuration: 0.2)
+                let transition = SKTransition.crossFade(withDuration: 0.5)
                 let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
                 gameOver.finalScore = self.score
                 self.view?.presentScene(gameOver, transition: transition)
@@ -197,9 +196,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Creates the bullets and adds effects with how it reacts after pressing down on the screen
         self.run(SKAction.playSoundFileNamed("Bullet.mp3", waitForCompletion: false))
         let bulletNode = SKSpriteNode(imageNamed: "bullet")
+        bulletNode.zPosition = 3
         bulletNode.size = CGSize(width: 15, height: 90)
         bulletNode.position = CGPoint(x: player.position.x, y: player.position.y + 120)
-        bulletNode.position.y += 10
+        bulletNode.position.y += 5
         bulletNode.physicsBody = SKPhysicsBody(circleOfRadius: bulletNode.size.width / 2)
         bulletNode.physicsBody?.isDynamic = true
         bulletNode.physicsBody?.categoryBitMask = bulletCategory
@@ -209,7 +209,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(bulletNode)
         
-        let animationDuration: TimeInterval = 0.3
+        let animationDuration: TimeInterval = 0.1
         
         var actionArray = [SKAction]()
         
@@ -281,7 +281,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if self.livesArray.count == 0 {
                 self.backgroundMusicPlayer!.stop()
-                let transition = SKTransition.crossFade(withDuration: 0.2)
+                let transition = SKTransition.crossFade(withDuration: 0.5)
                 let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
                 gameOver.finalScore = self.score
                 self.view?.presentScene(gameOver, transition: transition)
@@ -329,6 +329,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }))
     }
+    
     func moveLand() {
         self.enumerateChildNodes(withName: "Land", using: ({
             (node, error) in

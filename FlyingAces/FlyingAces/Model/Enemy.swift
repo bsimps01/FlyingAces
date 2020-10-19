@@ -15,6 +15,8 @@ enum enemyPlaneCollection: String, CaseIterable{
     case enemy1 = "enemy1"
     case enemy2 = "enemy2"
     case enemy3 = "enemy3"
+    case enemy4 = "enemy4"
+    case enemy5 = "enemy5"
 }
 
 class Enemy: SKSpriteNode, SKPhysicsContactDelegate{
@@ -25,7 +27,7 @@ class Enemy: SKSpriteNode, SKPhysicsContactDelegate{
         let randomEnemy = enemyPlaneCollection.allCases.randomElement()!
         let enemy = SKTexture(imageNamed: randomEnemy.rawValue)
         let color = UIColor.clear
-        let size = CGSize(width: 100, height: 140)
+        let size = CGSize(width: 110, height: 140)
         super.init(texture: enemy, color: color, size: size)
         
         self.physicsBody = SKPhysicsBody(circleOfRadius: self.size.width/2)

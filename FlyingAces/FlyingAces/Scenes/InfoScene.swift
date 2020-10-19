@@ -9,6 +9,7 @@
 import Foundation
 import SpriteKit
 import UIKit
+import AVFoundation
 
 class InfoScene: SKScene {
     
@@ -70,7 +71,7 @@ class InfoScene: SKScene {
             
             let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
-            button.setButtonLabel(title: "Back", font: "Marker Felt", fontSize: 20)
+            button.setButtonLabel(title: "Back", font: "Copperplate", fontSize: 20)
             button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 200)
             button.size = CGSize(width: 300, height: 100)
             button.zPosition = 4
