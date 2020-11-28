@@ -34,7 +34,7 @@ class InfoScene: SKScene {
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
         flyingAcesLogo.size = CGSize(width: 350, height: 200)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: 575)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 115)
         self.addChild(flyingAcesLogo)
         createButton()
         createBackground()
@@ -52,14 +52,14 @@ class InfoScene: SKScene {
     
     func createHowToPlayLabel(){
         gamePlayLabel = SKLabelNode(text: "Invasion! Fleets of enemy planes are looking to invade our country! Tap and drag the plane to move it and tap it again to fire your weapon! Make sure you don't let any planes pass you or you'll lose lives! If you get hit by a plane then you lose a life too. Good Luck!")
-        gamePlayLabel.fontSize = 24
-        gamePlayLabel.fontColor = SKColor.red
-        gamePlayLabel.fontName = "Copperplate"
+        gamePlayLabel.fontSize = 28
+        gamePlayLabel.fontColor = SKColor.systemRed
+        gamePlayLabel.fontName = "Copperplate-Bold"
         gamePlayLabel.zPosition = 5
-        gamePlayLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 - 120)
+        gamePlayLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 - 250)
         gamePlayLabel.lineBreakMode = .byWordWrapping
         gamePlayLabel.numberOfLines = 0
-        gamePlayLabel.preferredMaxLayoutWidth = 350
+        gamePlayLabel.preferredMaxLayoutWidth = 360
         self.addChild(gamePlayLabel)
     }
     
@@ -71,9 +71,9 @@ class InfoScene: SKScene {
             
             let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
-            button.setButtonLabel(title: "Back", font: "Copperplate", fontSize: 20)
-            button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 200)
-            button.size = CGSize(width: 300, height: 100)
+            button.setButtonLabel(title: "Back", font: "Copperplate", fontSize: 40)
+            button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 290)
+            button.size = CGSize(width: 280, height: 80)
             button.zPosition = 4
             self.addChild(button)
             

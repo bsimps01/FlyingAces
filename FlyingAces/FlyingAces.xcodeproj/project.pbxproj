@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B0785AF2570393000FEF761 /* TutorialScene1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0785AE2570393000FEF761 /* TutorialScene1.swift */; };
+		1B0785B3257039F100FEF761 /* TutorialScene2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0785B2257039F100FEF761 /* TutorialScene2.swift */; };
+		1B0785B725703A0500FEF761 /* TutorialScene3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0785B625703A0500FEF761 /* TutorialScene3.swift */; };
+		1B0785C22570F22D00FEF761 /* TutorialScene4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0785C12570F22D00FEF761 /* TutorialScene4.swift */; };
+		1B0785C82571EB4500FEF761 /* TutorialScene5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0785C72571EB4500FEF761 /* TutorialScene5.swift */; };
 		1B6742422538D4FD00B76F61 /* ButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6742412538D4FD00B76F61 /* ButtonNode.swift */; };
 		1B67424E2538DA4A00B76F61 /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B67424D2538DA4A00B76F61 /* InfoScene.swift */; };
 		1B6742542539288800B76F61 /* backgroundMusicMenu.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B6742532539288800B76F61 /* backgroundMusicMenu.mp3 */; };
@@ -47,6 +52,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B0785AE2570393000FEF761 /* TutorialScene1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScene1.swift; sourceTree = "<group>"; };
+		1B0785B2257039F100FEF761 /* TutorialScene2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScene2.swift; sourceTree = "<group>"; };
+		1B0785B625703A0500FEF761 /* TutorialScene3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScene3.swift; sourceTree = "<group>"; };
+		1B0785C12570F22D00FEF761 /* TutorialScene4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScene4.swift; sourceTree = "<group>"; };
+		1B0785C72571EB4500FEF761 /* TutorialScene5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScene5.swift; sourceTree = "<group>"; };
 		1B6742412538D4FD00B76F61 /* ButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNode.swift; sourceTree = "<group>"; };
 		1B67424D2538DA4A00B76F61 /* InfoScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoScene.swift; sourceTree = "<group>"; };
 		1B6742532539288800B76F61 /* backgroundMusicMenu.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusicMenu.mp3; sourceTree = "<group>"; };
@@ -98,6 +108,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B0785BE2570E7EA00FEF761 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				1B0785AE2570393000FEF761 /* TutorialScene1.swift */,
+				1B0785B2257039F100FEF761 /* TutorialScene2.swift */,
+				1B0785B625703A0500FEF761 /* TutorialScene3.swift */,
+				1B0785C12570F22D00FEF761 /* TutorialScene4.swift */,
+				1B0785C72571EB4500FEF761 /* TutorialScene5.swift */,
+			);
+			path = Tutorial;
+			sourceTree = "<group>";
+		};
 		1B67423A2538B70F00B76F61 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +138,7 @@
 			children = (
 				1B84A0512425B7EC00DCBEA0 /* MenuScene.swift */,
 				1B67424D2538DA4A00B76F61 /* InfoScene.swift */,
+				1B0785BE2570E7EA00FEF761 /* Tutorial */,
 				1BBA556823C3C66100F1B9E9 /* GameScene.swift */,
 				1BBA556A23C3C66100F1B9E9 /* GameViewController.swift */,
 				1B84A05524281E8900DCBEA0 /* GameOverScene.swift */,
@@ -314,14 +337,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B0785B3257039F100FEF761 /* TutorialScene2.swift in Sources */,
 				1BBA556923C3C66100F1B9E9 /* GameScene.swift in Sources */,
 				1B674262253B7ADE00B76F61 /* PhysicsCategory.swift in Sources */,
+				1B0785C22570F22D00FEF761 /* TutorialScene4.swift in Sources */,
 				1BBA556B23C3C66100F1B9E9 /* GameViewController.swift in Sources */,
+				1B0785B725703A0500FEF761 /* TutorialScene3.swift in Sources */,
 				1B84A0522425B7EC00DCBEA0 /* MenuScene.swift in Sources */,
 				1B84A05624281E8900DCBEA0 /* GameOverScene.swift in Sources */,
 				1B674266253B7CB300B76F61 /* Enemy.swift in Sources */,
+				1B0785AF2570393000FEF761 /* TutorialScene1.swift in Sources */,
 				1B67424E2538DA4A00B76F61 /* InfoScene.swift in Sources */,
 				1BBA556323C3C66100F1B9E9 /* AppDelegate.swift in Sources */,
+				1B0785C82571EB4500FEF761 /* TutorialScene5.swift in Sources */,
 				1B6742422538D4FD00B76F61 /* ButtonNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -491,7 +519,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.FlyingAces;
+				PRODUCT_BUNDLE_IDENTIFIER = com.benjamin5311.FlyingAces;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -509,7 +537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.FlyingAces;
+				PRODUCT_BUNDLE_IDENTIFIER = com.benjamin5311.FlyingAces;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

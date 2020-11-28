@@ -80,7 +80,7 @@ class GameOverScene: SKScene {
         scoreLabel.fontName = "Copperplate-Bold"
         scoreLabel.fontColor = .yellow
         scoreLabel.fontSize = 30
-        scoreLabel.position = CGPoint(x: size.width / 2, y: 400)
+        scoreLabel.position = CGPoint(x: size.width / 2, y: size.height - 300)
         scoreLabel.zPosition = 3
         self.addChild(scoreLabel)
         
@@ -88,14 +88,14 @@ class GameOverScene: SKScene {
         scoreLabelResult.fontName = "Copperplate"
         scoreLabelResult.fontColor = .white
         scoreLabelResult.fontSize = 50
-        scoreLabelResult.position = CGPoint(x: size.width / 2, y: 350)
+        scoreLabelResult.position = CGPoint(x: size.width / 2, y: size.height - 335)
         scoreLabelResult.zPosition = 3
         self.addChild(scoreLabelResult)
         
         highestScoreLabel.text = "Highest Score"
         highestScoreLabel.fontName = "Copperplate-Bold"
         highestScoreLabel.fontColor = .red
-        highestScoreLabel.position = CGPoint(x: size.width / 2, y: 630)
+        highestScoreLabel.position = CGPoint(x: size.width / 2, y: size.height - 75)
         highestScoreLabel.zPosition = 3
         self.addChild(highestScoreLabel)
         
@@ -104,7 +104,7 @@ class GameOverScene: SKScene {
         gameOverLabel.color = SKColor.white
         gameOverLabel.fontName = "Copperplate-Bold"
         gameOverLabel.zPosition = 3
-        gameOverLabel.position = CGPoint(x: size.width / 2, y: 450)
+        gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height - 250)
     }
 
         func createButton(){
@@ -114,7 +114,7 @@ class GameOverScene: SKScene {
             
             let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(GameOverScene.buttonTap))
-            button.setButtonLabel(title: "Play Again", font: "Copperplate", fontSize: 20)
+            button.setButtonLabel(title: "Play Again", font: "Copperplate", fontSize: 35)
             button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 70)
             button.size = CGSize(width: 300, height: 100)
             button.zPosition = 4
@@ -122,7 +122,7 @@ class GameOverScene: SKScene {
             
             let button2 = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
             button2.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(GameOverScene.buttonTap2))
-            button2.setButtonLabel(title: "Main Menu", font: "Copperplate", fontSize: 20)
+            button2.setButtonLabel(title: "Main Menu", font: "Copperplate", fontSize: 35)
             button2.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 200)
             button2.size = CGSize(width: 300, height: 100)
             button2.zPosition = 4
@@ -162,7 +162,7 @@ class GameOverScene: SKScene {
         
         highestScore.fontColor = .white
         highestScore.fontSize = 30
-        highestScore.position = CGPoint(x: size.width / 2, y: 600)
+        highestScore.position = CGPoint(x: size.width / 2, y: size.height - 100)
         highestScore.zPosition = 4
         self.addChild(highestScore)
     

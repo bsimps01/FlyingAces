@@ -17,12 +17,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var Waves = SKSpriteNode()
     //var player: SKSpriteNode!
     var scoreLabel:SKLabelNode!
+    var levelLabel:SKLabelNode!
     var scoreLabelText:SKLabelNode!
     var score: Int = 0 {
         didSet {
             scoreLabel.text = "\(score)"
         }
     }
+    var level: Int = 0 {
+        didSet {
+            levelLabel.text = "Level \(level)"
+        }
+    }
+    
     public var backgroundMusicPlayer: AVAudioPlayer?
     
     var gameTimer: Timer!
@@ -38,6 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     var livesArray: [SKSpriteNode]!
+    var animationDuration: TimeInterval = 4
     
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
@@ -59,11 +67,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.fontColor = UIColor.white
         score = 0
         
+        levelLabel = SKLabelNode(text: "Level \(level)")
+        levelLabel.position = CGPoint(x: frame.midX, y: self.frame.size.height - 100)
+        levelLabel.fontSize = 32
+        levelLabel.fontColor = UIColor.purple
+        levelLabel.fontName = "Copperplate-Bold"
+        level = 1
+        
+        self.addChild(levelLabel)
         self.addChild(scoreLabel)
         self.addChild(scoreLabelText)
         //Sets the amount of planes that get emmitted from the top of the game
         
-        let timeInterval = 0.75
+        let timeInterval = 1.0
         
         gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
         //Creates the movement for the player on the screen
@@ -72,29 +88,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createLand()
         addLives()
         playBackgroundMusic("backgroundMusicGame.mp3")
+        
     }
     
     public func playBackgroundMusic(_ filename: String) {
-      let url = Bundle.main.url(forResource: "backgroundMusicGame.mp3", withExtension: nil)
-      if (url == nil) {
-        print("Could not find file: \(filename)")
-        return
-      }
-
-      var error: NSError? = nil
-      do {
-        backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
-      } catch let error1 as NSError {
-        error = error1
-        backgroundMusicPlayer = nil
-      }
-      if let player = backgroundMusicPlayer {
-        player.numberOfLoops = -1
-        player.prepareToPlay()
-        player.play()
-      } else {
-        print("Could not create audio player: \(error!)")
-      }
+        let url = Bundle.main.url(forResource: "backgroundMusicGame.mp3", withExtension: nil)
+        if (url == nil) {
+            print("Could not find file: \(filename)")
+            return
+        }
+        
+        var error: NSError? = nil
+        do {
+            backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
+        } catch let error1 as NSError {
+            error = error1
+            backgroundMusicPlayer = nil
+        }
+        if let player = backgroundMusicPlayer {
+            player.numberOfLoops = -1
+            player.prepareToPlay()
+            player.play()
+        } else {
+            print("Could not create audio player: \(error!)")
+        }
     }
     
     func createPlayer(){
@@ -131,7 +148,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //Creates the enemy planes in the game
     @objc func addPlane() {
         let enemy = Enemy()
-
+        
         let randomEnemyPosition = GKRandomDistribution(lowestValue: 0, highestValue: Int(self.frame.size.width))
         let position = CGFloat(randomEnemyPosition.nextInt())
         enemy.zPosition = 3
@@ -139,27 +156,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(enemy)
         
-        let animationDuration: TimeInterval = 3
+        //var animationDuration: TimeInterval = 2
         
         var actionArray = [SKAction]()
         
         actionArray.append(SKAction.move(to: CGPoint(x: position, y: -enemy.size.height), duration: animationDuration))
-                actionArray.append(SKAction.run {self.run(SKAction.playSoundFileNamed("torpedo.mp3", waitForCompletion: false))
-        
-        if self.livesArray.count > 0 {
-            let liveNode = self.livesArray.first
-            liveNode!.removeFromParent()
-            self.livesArray.removeFirst()
+        actionArray.append(SKAction.run {self.run(SKAction.playSoundFileNamed("torpedo.mp3", waitForCompletion: false))
             
-            if self.livesArray.count == 0 {
-                self.backgroundMusicPlayer!.stop()
-                let transition = SKTransition.crossFade(withDuration: 0.5)
-                let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
-                gameOver.finalScore = self.score
-                self.view?.presentScene(gameOver, transition: transition)
+            
+            
+            if self.livesArray.count > 0 {
+                let liveNode = self.livesArray.first
+                liveNode!.removeFromParent()
+                self.livesArray.removeFirst()
+                
+                if self.livesArray.count == 0 {
+                    self.backgroundMusicPlayer!.stop()
+                    let transition = SKTransition.crossFade(withDuration: 0.5)
+                    let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
+                    gameOver.finalScore = self.score
+                    self.view?.presentScene(gameOver, transition: transition)
+                }
             }
-        }
-                })
+        })
         
         
         actionArray.append(SKAction.removeFromParent())
@@ -190,6 +209,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         moveClouds()
         moveLand()
+        if self.score == 50 {
+            animationDuration = 3
+            level = 2
+        }else if self.score == 150 {
+            animationDuration = 2.50
+            level = 3
+        }else if self.score == 250 {
+            animationDuration = 2.25
+            level = 4
+        }else if self.score == 350 {
+            animationDuration = 2
+            level = 5
+        }else if self.score == 450 {
+            animationDuration = 1.5
+            level = 6
+        }else if self.score == 550 {
+            animationDuration = 1.25
+            level = 7
+        }else if self.score == 650 {
+            animationDuration = 1
+            level = 8
+        }else if self.score == 750 {
+            animationDuration = 0.75
+            level = 9
+        }else if self.score >= 850 {
+            animationDuration = 0.25
+            level = 10
+        }
     }
     
     func fireBullets() {
@@ -242,7 +289,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             enemyDidCollideWithPlayer(player: firstBody.node as! SKSpriteNode, enemyNode: secondBody.node as! SKSpriteNode)
             
-
+            
         }
         
     }
@@ -285,7 +332,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let gameOver = GameOverScene(size: (self.view?.bounds.size)!)
                 gameOver.finalScore = self.score
                 self.view?.presentScene(gameOver, transition: transition)
-        }
+            }
         }
         
         
@@ -323,7 +370,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Moves the clouds down the screen in a loop
         self.enumerateChildNodes(withName: "Clouds", using: ({
             (node, error) in
-            node.position.y -= 6
+            node.position.y -= 20
             if node.position.y < -((self.scene?.size.height)!) {
                 node.position.y += (self.scene?.size.height)! * 3
             }

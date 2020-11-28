@@ -34,12 +34,12 @@ class MenuScene: SKScene {
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
         flyingAcesLogo.size = CGSize(width: 350, height: 275)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: 500)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 180)
         self.addChild(flyingAcesLogo)
         createButtons()
         createClouds()
         createLand()
-        playBackgroundMusic("backgroundMusicMenu.mp3")    }
+        playBackgroundMusic("backgroundMusicMenu.mp3") }
     
     func createButtons(){
         let buttonTexture = SKTexture(imageNamed: "button")
@@ -47,17 +47,17 @@ class MenuScene: SKScene {
         
         let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap))
-        button.setButtonLabel(title: "Start Game", font: "Copperplate", fontSize: 20)
+        button.setButtonLabel(title: "Start Game", font: "Copperplate", fontSize: 35)
         button.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
-        button.size = CGSize(width: 300, height: 100)
+        button.size = CGSize(width: 300, height: 80)
         button.zPosition = 4
         self.addChild(button)
         
         let button2 = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button2.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(MenuScene.buttonTap2))
-        button2.setButtonLabel(title: "How to Play", font: "Copperplate", fontSize: 20)
+        button2.setButtonLabel(title: "How to Play", font: "Copperplate", fontSize: 35)
         button2.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 160)
-        button2.size = CGSize(width: 300, height: 100)
+        button2.size = CGSize(width: 300, height: 80)
         button2.zPosition = 4
         self.addChild(button2)
     }
@@ -75,7 +75,7 @@ class MenuScene: SKScene {
     }
     
     @objc func buttonTap2(){
-        let infoScene = InfoScene(size: (self.view?.bounds.size)!)
+        let infoScene = TutorialScene1(size: (self.view?.bounds.size)!)
         
         infoScene.scaleMode = .aspectFill
         let crossFade = SKTransition.crossFade(withDuration: 0.75)
