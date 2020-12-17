@@ -12,7 +12,11 @@ import AVFoundation
 class MenuScene: SKScene {
     
     var Clouds = SKSpriteNode()
+    
     public var backgroundMusicPlayer: AVAudioPlayer?
+    
+    let audio = JKAudioPlayer.sharedInstance()
+    
     
     override init(size: CGSize) {
         // do initial configuration work here
@@ -30,6 +34,7 @@ class MenuScene: SKScene {
             moveLand()
     }
     
+    
     override func didMove(to view: SKView) {
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
         flyingAcesLogo.size = CGSize(width: 350, height: 275)
@@ -39,7 +44,9 @@ class MenuScene: SKScene {
         createButtons()
         createClouds()
         createLand()
-        playBackgroundMusic("backgroundMusicMenu.mp3") }
+        MyAudioPlayer.playFile(name: "backgroundMusicMenu", type: "mp3")
+
+    }
     
     func createButtons(){
         let buttonTexture = SKTexture(imageNamed: "button")
@@ -62,12 +69,18 @@ class MenuScene: SKScene {
         self.addChild(button2)
     }
     
+    func sound(){
+        let sound:SKAction = SKAction.playSoundFileNamed("backgroundMusicMenu.mp3", waitForCompletion: true)
+        let loopSound:SKAction = SKAction.repeatForever(sound)
+        self.run(loopSound)
+    }
+    
     @objc func buttonTap(){
         let gameScene = GameScene(size: (self.view?.bounds.size)!)
-        
         gameScene.scaleMode = .aspectFill
         let crossFade = SKTransition.crossFade(withDuration: 0.75)
-        backgroundMusicPlayer!.stop()
+        //backgroundMusicPlayer!.stop()
+        MyAudioPlayer.stopFile(name: "backgroundMusicMenu", type: "mp3")
         if let spriteview = self.view{
             spriteview.presentScene(gameScene, transition: crossFade)
         }
@@ -76,7 +89,6 @@ class MenuScene: SKScene {
     
     @objc func buttonTap2(){
         let infoScene = TutorialScene1(size: (self.view?.bounds.size)!)
-        
         infoScene.scaleMode = .aspectFill
         let crossFade = SKTransition.crossFade(withDuration: 0.75)
         if let spriteview = self.view{
@@ -85,7 +97,7 @@ class MenuScene: SKScene {
     }
     
     public func playBackgroundMusic(_ filename: String) {
-      let url = Bundle.main.url(forResource: "backgroundMusicMenu.mp3", withExtension: nil)
+        let url = Bundle.main.url(forResource: "backgroundMusicMenu.mp3", withExtension: nil)
       if (url == nil) {
         print("Could not find file: \(filename)")
         return
@@ -141,7 +153,7 @@ class MenuScene: SKScene {
             (node, error) in
             node.position.y -= 6
             if node.position.y < -((self.scene?.size.height)!) {
-                node.position.y += (self.scene?.size.height)! * 3
+                node.position.y += (self.scene?.size.height)! * 2
             }
         }))
     }
@@ -150,7 +162,7 @@ class MenuScene: SKScene {
             (node, error) in
             node.position.y -= 1
             if node.position.y < -((self.scene?.size.height)!) {
-                node.position.y += (self.scene?.size.height)! * 3
+                node.position.y += (self.scene?.size.height)! * 2
             }
             
         }))

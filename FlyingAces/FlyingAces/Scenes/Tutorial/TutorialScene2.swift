@@ -33,9 +33,9 @@ class TutorialScene2: SKScene {
     override func didMove(to view: SKView) {
         
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
-        flyingAcesLogo.size = CGSize(width: 100, height: 100)
+        flyingAcesLogo.size = CGSize(width: 200, height: 150)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 50)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 150)
         self.addChild(flyingAcesLogo)
         createBackground()
         createPlayer()
@@ -69,6 +69,7 @@ class TutorialScene2: SKScene {
         gamePlayLabel.preferredMaxLayoutWidth = 360
         self.addChild(gamePlayLabel)
     }
+    
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in (touches) {
             let location = touch.location(in: self)
@@ -131,7 +132,7 @@ class TutorialScene2: SKScene {
         let button = ButtonNode(normalTexture: buttonTexture, selectedTexture: buttonSelected, disabledTexture: buttonTexture)
         button.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(TutorialScene2.buttonTap))
         button.setButtonLabel(title: "Main Menu", font: "Copperplate", fontSize: 20)
-        button.position = CGPoint(x: self.frame.width / 6, y: self.frame.height - 50)
+        button.position = CGPoint(x: self.frame.width / 6, y: self.frame.height - 60)
         button.size = CGSize(width: 120, height: 50)
         button.zPosition = 4
         self.addChild(button)

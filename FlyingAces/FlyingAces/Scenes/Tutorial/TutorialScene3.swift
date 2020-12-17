@@ -43,9 +43,9 @@ class TutorialScene3: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
-        flyingAcesLogo.size = CGSize(width: 100, height: 100)
+        flyingAcesLogo.size = CGSize(width: 200, height: 150)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 50)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 150)
         self.addChild(flyingAcesLogo)
         createBackground()
         createPlayer()

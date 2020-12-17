@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "F16.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "WWII plane.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -9,11 +9,13 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -31,6 +33,8 @@ class GameViewController: UIViewController {
             self.navigationController?.isNavigationBarHidden = true
         }
     }
+    
+    
 
     override var shouldAutorotate: Bool {
         return true
@@ -47,4 +51,5 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
 }

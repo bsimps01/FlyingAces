@@ -12,6 +12,8 @@ import AVFoundation
 
 class TutorialScene1: SKScene {
     
+    public var backgroundMusicPlayer: AVAudioPlayer?
+    
     var gamePlayLabel: SKLabelNode!
     let player = SKSpriteNode(imageNamed: "player")
 
@@ -32,14 +34,38 @@ class TutorialScene1: SKScene {
     override func didMove(to view: SKView) {
         
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
-        flyingAcesLogo.size = CGSize(width: 100, height: 100)
+        flyingAcesLogo.size = CGSize(width: 200, height: 150)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 50)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 150)
         self.addChild(flyingAcesLogo)
         createBackground()
         createPlayer()
         createHowToPlayLabel()
         createButtons()
+        //playBackgroundMusic("backgroundMusicMenu.mp3")
+    }
+    
+    public func playBackgroundMusic(_ filename: String) {
+      let url = Bundle.main.url(forResource: "backgroundMusicMenu.mp3", withExtension: nil)
+      if (url == nil) {
+        print("Could not find file: \(filename)")
+        return
+      }
+
+      var error: NSError? = nil
+      do {
+        backgroundMusicPlayer = try AVAudioPlayer(contentsOf: url!)
+      } catch let error1 as NSError {
+        error = error1
+        backgroundMusicPlayer = nil
+      }
+      if let player = backgroundMusicPlayer {
+        player.numberOfLoops = -1
+        player.prepareToPlay()
+        player.play()
+      } else {
+        print("Could not create audio player: \(error!)")
+      }
     }
     
     func createBackground(){

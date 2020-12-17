@@ -56,9 +56,9 @@ class TutorialScene4: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         
         let flyingAcesLogo = SKSpriteNode(imageNamed: "FlyingAcesLogo")
-        flyingAcesLogo.size = CGSize(width: 100, height: 100)
+        flyingAcesLogo.size = CGSize(width: 150, height: 100)
         flyingAcesLogo.zPosition = 3
-        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 50)
+        flyingAcesLogo.position = CGPoint(x: size.width/2, y: size.height - 150)
         self.addChild(flyingAcesLogo)
         createBackground()
         createPlayer()
@@ -135,7 +135,7 @@ class TutorialScene4: SKScene, SKPhysicsContactDelegate {
             let liveNode = SKSpriteNode(imageNamed: "player")
             liveNode.size = CGSize(width: 50, height: 50)
             liveNode.zPosition = 4
-            liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 40)
+            liveNode.position = CGPoint(x: self.frame.size.width - CGFloat(4 - live) * liveNode.size.width, y: self.frame.size.height - 50)
             self.addChild(liveNode)
             livesArray.append(liveNode)
         }

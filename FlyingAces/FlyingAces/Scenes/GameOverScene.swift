@@ -48,7 +48,8 @@ class GameOverScene: SKScene {
         createButton()
         createLabels()
         setHighestScore()
-        playBackgroundMusic("backgroundMusicMenu.mp3")
+        //playBackgroundMusic("backgroundMusicMenu.mp3")
+        MyAudioPlayer.playFile(name: "backgroundMusicMenu", type: "mp3")
     
     }
     
@@ -134,7 +135,8 @@ class GameOverScene: SKScene {
 
             gameScene.scaleMode = .aspectFill
             let crossFade = SKTransition.crossFade(withDuration: 0.75)
-            self.backgroundMusicPlayer!.stop()
+            //self.backgroundMusicPlayer!.stop()
+            MyAudioPlayer.stopFile(name: "backgroundMusicMenu", type: "mp3")
             if let spriteview = self.view{
                 spriteview.presentScene(gameScene, transition: crossFade)
             }
@@ -145,7 +147,7 @@ class GameOverScene: SKScene {
 
             gameScene.scaleMode = .aspectFill
             let crossFade = SKTransition.crossFade(withDuration: 0.75)
-            backgroundMusicPlayer!.stop()
+            //backgroundMusicPlayer!.stop()
             if let spriteview = self.view{
                 spriteview.presentScene(gameScene, transition: crossFade)
             }

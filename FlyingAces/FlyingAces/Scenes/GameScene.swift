@@ -46,6 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var livesArray: [SKSpriteNode]!
     var animationDuration: TimeInterval = 4
+    var timeInterval = 1.0
     
     override func didMove(to view: SKView){
         //Sets the logic for creating the player in the game
@@ -79,7 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(scoreLabelText)
         //Sets the amount of planes that get emmitted from the top of the game
         
-        let timeInterval = 1.0
+        //let timeInterval = 1.0
         
         gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(addPlane), userInfo:nil, repeats: true)
         //Creates the movement for the player on the screen
@@ -88,6 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createLand()
         addLives()
         playBackgroundMusic("backgroundMusicGame.mp3")
+        //MyAudioPlayer.playFile(name: "backgroundMusicGame", type: "mp3")
         
     }
     
@@ -111,6 +113,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             player.play()
         } else {
             print("Could not create audio player: \(error!)")
+            backgroundMusicPlayer?.currentTime = 0
+            backgroundMusicPlayer!.stop()
         }
     }
     
@@ -217,6 +221,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             level = 3
         }else if self.score == 250 {
             animationDuration = 2.25
+            timeInterval = 0.5
             level = 4
         }else if self.score == 350 {
             animationDuration = 2
@@ -370,9 +375,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Moves the clouds down the screen in a loop
         self.enumerateChildNodes(withName: "Clouds", using: ({
             (node, error) in
-            node.position.y -= 20
+            node.position.y -= 15
             if node.position.y < -((self.scene?.size.height)!) {
-                node.position.y += (self.scene?.size.height)! * 3
+                node.position.y += (self.scene?.size.height)! * 2
             }
         }))
     }
@@ -382,7 +387,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             (node, error) in
             node.position.y -= 1
             if node.position.y < -((self.scene?.size.height)!) {
-                node.position.y += (self.scene?.size.height)! * 3
+                node.position.y += (self.scene?.size.height)! * 2
             }
             
         }))
