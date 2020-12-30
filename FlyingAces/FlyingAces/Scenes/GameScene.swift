@@ -249,7 +249,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(SKAction.playSoundFileNamed("Bullet.mp3", waitForCompletion: false))
         let bulletNode = SKSpriteNode(imageNamed: "bullet")
         bulletNode.zPosition = 3
-        bulletNode.size = CGSize(width: 15, height: 90)
+        bulletNode.size = CGSize(width: 10, height: 90)
         bulletNode.position = CGPoint(x: player.position.x, y: player.position.y + 120)
         bulletNode.position.y += 5
         bulletNode.physicsBody = SKPhysicsBody(circleOfRadius: bulletNode.size.width / 2)

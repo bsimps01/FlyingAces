@@ -40,6 +40,7 @@ class MyAudioPlayer: NSObject, AVAudioPlayerDelegate {
             } else{
                 thePlayer.delegate = sharedPlayer
                 sharedPlayer.container[key] = thePlayer
+                thePlayer.numberOfLoops = -1
                 thePlayer.play()
             }
         }
